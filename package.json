@@ -1,0 +1,54 @@
+{
+  "name": "gptheist",
+  "version": "1.0.0",
+  "description": "Ten agents pass one market decision forward. Any one of them can kill it.",
+  "author": "immortalhowwl",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/immortalhowwl/gptheist.git"
+  },
+  "homepage": "https://github.com/immortalhowwl/gptheist#readme",
+  "bugs": {
+    "url": "https://github.com/immortalhowwl/gptheist/issues"
+  },
+  "keywords": [
+    "multi-agent",
+    "paper-trading",
+    "market-replay",
+    "risk",
+    "cli"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "gptheist": "dist/src/cli.js"
+  },
+  "files": [
+    "dist/src",
+    "fixtures",
+    "docs",
+    "assets",
+    "README.md",
+    "LICENSE",
+    "SECURITY.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/src/cli.js desk --host 0.0.0.0 --port ${PORT:-4173}",
+    "test": "npm run build && node --test dist/tests/*.test.js",
+    "demo": "npm run build --silent && node dist/src/cli.js demo",
+    "desk": "npm run build --silent && node dist/src/cli.js desk",
+    "prepare": "npm run build"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "@types/node": "^18.19.0",
+    "typescript": "^5.7.0"
+  },
+  "dependencies": {
+    "ccxt": "^4.5.88",
+    "viem": "^2.56.3"
+  }
+}

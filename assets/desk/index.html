@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="모바일과 데스크톱에서 X 밈코인 후보 및 해외 현물 거래소 API 연결 상태를 확인하는 개인 트레이딩 데스크.">
+  <title>돈복사기 · X 밈코인 추적</title>
+  <link rel="stylesheet" href="/desk.css">
+  <meta name="theme-color" content="#080a07">
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+  <header class="masthead">
+    <div class="brand"><span>돈</span>복사기 <sup>LIVE DESK</sup></div>
+    <nav class="desk-nav" aria-label="Desk sections">
+      <a class="active" href="/">시장 데스크</a>
+      <a href="/trace">흐름</a>
+      <a href="/crew">역할</a>
+      <a href="/method">방법</a>
+      <a href="/vault">기록</a>
+    </nav>
+    <div class="chain-lock"><i id="pulse"></i><span>ROBINHOOD CHAIN</span><b id="block">연결 중</b></div>
+    <div class="safety">지갑 직접 서명<br><b>거래 때마다 승인 필요</b></div>
+  </header>
+
+  <div class="system-strip" aria-label="System guarantees">
+    <span>모드 <b>사용자 서명</b></span><i></i>
+    <span>역할 <b>10</b></span><i></i>
+    <span>공장 계약 <b>PONS V2</b></span><i></i>
+    <span>지갑 접근 <b>연결 시</b></span><i></i>
+    <span>주문 경로 <b>수동 승인</b></span>
+  </div>
+
+  <main id="live-desk">
+    <section class="briefing">
+      <p class="eyebrow">실시간 / X 신규 밈코인 추적 + KRW 상장 확인</p>
+      <h1>X에서 찾고.<br><em>거래소까지 추적.</em></h1>
+      <p class="lede">X 공개 검색에서 새 밈코인 언급을 모으고, 심볼·계약 주소를 검토해 빗썸 KRW 상장 여부와 연결합니다. 상장 전 코인은 감시하고 상장된 시장만 국내 현물 주문을 허용합니다.</p>
+      <div class="metrics" aria-label="Live metrics">
+        <div><span>최근 조회</span><strong id="launch-count">—</strong><small>신규 발행</small></div>
+        <div><span>관찰</span><strong id="watch-count">—</strong><small>WATCH</small></div>
+        <div><span>거부</span><strong id="veto-count">—</strong><small>VETO</small></div>
+      </div>
+    </section>
+
+    <section class="live-trader" aria-label="X 밈코인 및 글로벌 거래소">
+      <div class="panel-head"><span>X 신규 밈코인 → 글로벌 현물 거래소 상장 매칭</span><b id="exchange-state">API 키 미연결</b></div>
+      <p class="live-trader-copy">X 공개 게시글에서 밈코인 후보를 찾고 거래소 현물 심볼과 대조합니다. 거래소가 한국 거주 계정의 API 주문을 허용하는지는 본인 KYC/API 연결로 확인하세요. API 키는 서버 메모리에만 보관하며 출금 API는 호출하지 않습니다.</p>
+      <div class="wallet-controls"><label>거래소<select id="exchange-select"></select></label><label>API key<input id="exchange-key" autocomplete="off" spellcheck="false"></label><label>API secret<input id="exchange-secret" type="password" autocomplete="new-password"></label><button id="wallet-connect" type="button">잔고 확인 / 연결</button><button id="disconnect" type="button">연결 해제</button></div>
+      <div class="wallet-controls"><b id="trade-token">X 포착 코인 선택</b><label>거래쌍<select id="trade-market"><option value="">X 후보 선택</option></select></label><label>매수 금액 (quote)<input id="trade-buy" inputmode="decimal" value="10"></label><label>매도 수량 (base)<input id="trade-sell" inputmode="decimal" value="0"></label></div>
+      <div class="wallet-controls"><button id="live-buy" type="button" disabled>시장가 매수</button><button id="live-sell" type="button" disabled>시장가 매도</button><span id="trade-status">연결 전 · 자동매매 중지</span></div>
+      <div class="panel-head"><span>자동 X 신호 거래 · 목표 자산 100,000×</span><b id="auto-status">중지</b></div>
+      <p class="live-trader-copy">X가 선택한 티커를 새로 언급할 때마다 시장가 매수하고, 일일 주문 한도 또는 기준자산 대비 손실 제한에 도달하면 자동 중지합니다. 100,000×에 도달하면 앱이 추적한 보유 수량 매도를 요청합니다. 자동 실행은 아래 시작 버튼을 눌러야 켜집니다.</p>
+      <div class="wallet-controls"><label>신호당 매수액 (quote)<input id="auto-order-size" inputmode="decimal" value="5"></label><label>일일 최대 주문액<input id="auto-daily-cap" inputmode="decimal" value="20"></label><label>기준자산 손실 정지 %<input id="auto-drawdown" type="number" min="1" max="95" value="20"></label><button id="auto-start" type="button" disabled>자동매매 시작</button><button id="auto-stop" type="button">자동매매 중지</button><span id="auto-log">자동매매 대기</span></div>
+      <div class="panel-head"><span>X 공개 언급 · 거래쌍 상장 매칭</span><b id="market-status">검색 대기</b></div>
+      <div class="wallet-controls"><label>X API bearer token<input id="x-token" type="password" autocomplete="new-password"></label><button id="x-connect" type="button">X 연결</button><button id="x-disconnect" type="button">해제</button><label>X 검색어<input id="x-query" value="(meme coin OR memecoin OR memecoin launch)" autocomplete="off"></label><button id="x-search" type="button">최근 게시글 검색</button><span id="x-status">X API 인증 필요</span></div>
+      <div id="x-feed" class="feed"></div>
+      <div class="panel-head"><span>선택 거래소 현물 종목</span><b id="ticker-status">동기화 대기</b></div><div id="ticker-feed" class="feed"></div>
+      <ol id="trade-log" class="paper-log"></ol>
+    </section>
+    <section class="route-panel" aria-label="Agent decision route">
+      <div class="panel-head"><span>에이전트 인계 흐름</span><b id="selected-token">대상 대기 중</b></div>
+      <nav class="target-links" aria-label="Selected launch links">
+        <a id="pons-link" href="https://www.ponsfamily.com/launchpad/" target="_blank" rel="noopener noreferrer">PONS ↗</a>
+        <a id="token-link" href="https://robinhoodchain.blockscout.com/" target="_blank" rel="noopener noreferrer">TOKEN ↗</a>
+        <a id="tx-link" href="https://robinhoodchain.blockscout.com/" target="_blank" rel="noopener noreferrer">TX ↗</a>
+      </nav>
+      <div class="route" id="route"></div>
+      <div class="decision-card" id="decision-card">
+        <div class="crosshair" aria-hidden="true"></div>
+        <span>PROFESSOR / 최종</span>
+        <strong id="decision">대기</strong>
+        <p id="decision-copy">검증된 발행 이벤트를 기다리는 중입니다.</p>
+      </div>
+      <div class="evidence-card">
+        <div class="evidence-grid">
+          <div><span>관찰 점수 / 100</span><strong id="score">—</strong></div>
+          <div><span>CURVE</span><strong id="progress">—</strong></div>
+          <div><span>PHASE</span><strong id="phase">—</strong></div>
+          <div><span>CREATOR / SNIPE</span><strong id="taxes">—</strong></div>
+        </div>
+        <div class="evidence-copy"><span>근거</span><p id="evidence">발행 항목을 선택하면 근거를 확인할 수 있습니다.</p></div>
+      </div>
+    </section>
+
+    <aside class="feed-panel">
+      <div class="panel-head"><span>체인 신규 발행 감시</span><b id="sync">동기화 중</b></div>
+      <div class="filters" aria-label="Filter launches">
+        <button type="button" class="active" data-filter="ALL">전체</button>
+        <button type="button" data-filter="WATCH">WATCH</button>
+        <button type="button" data-filter="VETO">VETO</button>
+      </div>
+      <div class="feed" id="feed" aria-live="polite"></div>
+    </aside>
+
+    <section class="trace-panel">
+      <div class="panel-head"><span>체인 근거 기록</span><b id="trace-id">기록 없음</b></div>
+      <ol id="trace" class="trace"></ol>
+    </section>
+
+    <section class="dossier-panel" id="dossier" aria-label="Selected launch research dossier">
+      <div class="section-head">
+        <div><span>선택 항목 / 읽기 전용 조사</span><h2>토큰 정보</h2></div>
+        <b id="dossier-status">검증된 발행 대기 중</b>
+      </div>
+      <div class="dossier-grid">
+        <article class="intel identity-intel">
+          <span>토큰 / 출처</span>
+          <h3 id="token-identity">대상 없음</h3>
+          <dl>
+            <div><dt>factory</dt><dd id="factory-proof">—</dd></div>
+            <div><dt>deployer</dt><dd id="deployer-address">—</dd></div>
+            <div><dt>fee route</dt><dd id="fee-route">—</dd></div>
+          </dl>
+        </article>
+        <article class="intel">
+          <span>커브 상태</span>
+          <h3 id="liquidity-verdict">UNREAD</h3>
+          <dl>
+            <div><dt>real quote in</dt><dd id="real-quote">—</dd></div>
+            <div><dt>to graduation</dt><dd id="graduation-left">—</dd></div>
+            <div><dt>curve reserves</dt><dd id="curve-reserves">—</dd></div>
+          </dl>
+        </article>
+        <article class="intel">
+          <span>발행자 기록</span>
+          <h3 id="deployer-verdict">UNREAD</h3>
+          <dl>
+            <div><dt>prior launches</dt><dd id="prior-launches">—</dd></div>
+            <div><dt>graduated</dt><dd id="prior-graduated">—</dd></div>
+            <div><dt>observed window</dt><dd id="history-window">—</dd></div>
+          </dl>
+        </article>
+        <article class="intel social-intel">
+          <span>소셜 정보</span>
+          <h3 id="social-verdict">UNREAD</h3>
+          <nav id="social-links" aria-label="Declared project social links"><span>NO DECLARED LINKS</span></nav>
+          <p id="social-proof">On-chain declarations are shown separately from external profile reputation.</p>
+        </article>
+        <article class="intel risk-intel">
+          <span>위험 신호 / 확인 공백</span>
+          <h3 id="risk-verdict">FAIL CLOSED</h3>
+          <ul id="risk-flags"><li>Select a launch to inspect explicit risks.</li></ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="roadmap-panel" id="roadmap" aria-label="GPTHEIST product roadmap">
+      <div class="section-head">
+        <div><span>공개 구현 범위</span><h2>기능 현황</h2></div>
+        <b>별도 토큰 불필요</b>
+      </div>
+      <ol class="roadmap">
+        <li class="live"><span>01 / 작동 중</span><h3>체인 데스크</h3><p>Pons 발행 이벤트, 10단계 인계, WATCH/VETO 규칙, 탐색기 링크.</p></li>
+        <li class="live"><span>02 / 작동 중</span><h3>토큰 조사표</h3><p>커브 상태, 발행자 이력 범위, 선언된 소셜 링크, 출처와 미확인 항목.</p></li>
+        <li class="building"><span>03 / BUILDING</span><h3>SOCIAL REPUTATION</h3><p>Public X profile age, reach and identity signals, isolated from the on-chain verdict.</p></li>
+        <li><span>04 / NEXT</span><h3>FLOW FORENSICS</h3><p>Buy/sell activity, unique participants, launch transaction and declared bundle analysis.</p></li>
+        <li class="live"><span>05 / 작동 중</span><h3>직접 지갑 거래</h3><p>실시간 견적, 슬리피지 하한, 지갑 서명 매수·매도. 자동 주문은 비활성.</p></li>
+      </ol>
+    </section>
+  </main>
+
+  <footer>
+    <span>공장 계약 <a href="https://robinhoodchain.blockscout.com/address/0x7eD598BcEf8bd9Edd8C97A195C6d13f40801EC7e" target="_blank" rel="noreferrer">0x7eD5…EC7e ↗</a></span>
+    <nav class="social-links" aria-label="GPTHEIST links">
+      <a href="https://x.com/immortalhowwl" target="_blank" rel="noopener noreferrer">원문 작성자 ↗</a>
+      <a href="https://github.com/immortalhowwl/gptheist" target="_blank" rel="noopener noreferrer">공개 코드 ↗</a>
+    </nav>
+    <span id="updated">NOT YET SYNCED</span>
+    <span>자기보관 지갑 · 거래마다 서명</span>
+  </footer>
+  <script src="/desk.js" defer></script>
+</body>
+</html>
